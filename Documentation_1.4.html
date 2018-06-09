@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC '-//IETF//DTD HTML//EN'>
+<HTML>
+<HEAD>
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+<TITLE>ZET-JSON</TITLE>
+
+<style>
+ .contents { font-size: 20; font-style: italic; font-weight: bold; color: #008080 }
+ .doctext  { text-align: justify; margin-left: 10; font-size: 18; font-style: normal; font-weight: normal; color: #000000 }
+ .docpre  { text-align: justify; margin-left: 10; white-space: pre; font-size: 18; font-style: normal; font-weight: normal; color: #000000 }
+ .caption  { text-align: center; white-space: nowrap; font-size: 20; font-style: italic; font-weight: bold; color: #008080 }
+ .ifc  { text-align: center; margin-left: 10; white-space: nowrap; font-size: 18; font-style: italic; font-weight: bold; color: #000000 }
+</style>
+
+</HEAD>
+<BODY  bgcolor='#FFFFFF'>
+
+<br><br><br><center><span class="caption" style="color: #000000; font-size: 23">ZET-JSON</span></center><br><br><br>
+<div  class="doctext">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZET-JSON is the library for json format. ZET-JSON uses STL library. Supported JSON types:
+ zJSON::enum {JSON_NULL = 0, JSON_BOOLEAN, JSON_INTEGER, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_NODE}.
+ Interface JSON container similar to the interface std::vector.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To install, use the Makefile (make -f Makefile, make -f Makefile install). By default, header file(zJSON.h)
+ and lib file will be installed in /usr/local/include/ and /usr/local/lib/.
+ You can use ZET- JSON (not as the library) with your code by rewriting the Makefile.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZET-JSON contains following json extension: the same object names in a container,
+ a comma after the last object in a container, comments, string concatenation.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">COMMENTS</span><br><br>
+You can use the following types of comments:<br>
+# ... until the end of the line;<br>
+// ... until the end of the line;<br>
+/*...*/ - comment block;<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">static zJSON* parse(const char* src, size_t len, size_t start_pos=0);</span><br>
+<span class="ifc">static zJSON* parse(const std::string& src, size_t start_pos=0);</span><br>
+<span class="ifc">static zJSON* parse(const char* src, size_t len, size_t start_pos, size_t& res_pos);</span><br>
+<span class="ifc">static zJSON* parse(const std::string& src, size_t start_pos, size_t& res_pos);</span><br>
+<span class="ifc">static bool parse(zJSON& ret, const char* src, size_t len, size_t start_pos=0);</span><br>
+<span class="ifc">static bool parse(zJSON& ret, const std::string& src, size_t start_pos=0);</span><br>
+<span class="ifc">static bool parse(zJSON& ret, const char* src, size_t len, size_t start_pos, size_t& res_pos);</span><br>
+<span class="ifc">static bool parse(zJSON& ret, const std::string& src, size_t start_pos, size_t& res_pos);</span><br><br>
+Parses JSON text src start at start_pos and returns the JSON object which is the root.<br>
+The function returns pointer or reference(ret) to the JSON object.
+ If error occurrence NULL will be return and true - successfully , false - unsuccessfully.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">explicit zJSON(int json_type = zJSON::JSON_NODE, const std::string& json_name=&quot;&quot;);</span><br>
+//JSON_BOOLEAN<br>
+<span class="ifc">zJSON(const std::string& json_name, bool json_value);</span><br>
+// JSON_INTEGER<br>
+<span class="ifc">zJSON(const std::string& json_name, char json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, unsigned char json_value); </span><br>
+<span class="ifc">zJSON(const std::string& json_name, short json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, unsigned short json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, int json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, unsigned json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, int64_t json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, uint64_t json_value);</span><br>
+//JSON_NUMBER<br>
+<span class="ifc">zJSON(const std::string& json_name, float json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, double json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, long double json_value);</span><br>
+// JSON_STRING<br>
+<span class="ifc">zJSON(const std::string& json_name, const char* json_value);</span><br>
+<span class="ifc">zJSON(const std::string& json_name, const std::string & json_value);</span><br>
+// Constructor copy<br>
+<span class="ifc">zJSON(const zJSON& src);</span><br>
+// Recreate object<br>
+<span class="ifc">void create(int json_type = zJSON::JSON_NODE, const std::string& json_name=&quot;&quot;);</span><br><br>
+Creates JSON object with parent=NULL, name=json_name and assign JSON object to specific value and type.<br>
+json_type - enum { JSON_NULL=0, JSON_BOOLEAN, JSON_INTEGER, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_NODE }.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">void operator delete (zJSON* ptr );</span><br><br>
+Deletes JSON object. This effectively reduces the parent container size by the one element, which are destroyed.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON& operator=(const zJSON& src);</span><br>
+<span class="ifc">zJSON& operator=(bool json_value);</span><br>
+<span class="ifc">zJSON& operator=(char json_value);</span><br>
+<span class="ifc">zJSON& operator=(unsigned char json_value);</span><br>
+<span class="ifc">zJSON& operator=(short json_value);</span><br>
+<span class="ifc">zJSON& operator=(unsigned short json_value);</span><br>
+<span class="ifc">zJSON& operator=(int json_value);</span><br>
+<span class="ifc">zJSON& operator=(unsigned json_value);</span><br>
+<span class="ifc">zJSON& operator=(int64_t json_value);</span><br>
+<span class="ifc">zJSON& operator=(uint64_t json_value);</span><br>
+<span class="ifc">zJSON& operator=(float json_value);</span><br>
+<span class="ifc">zJSON& operator=(double json_value);</span><br>
+<span class="ifc">zJSON& operator=(long double json_value);</span><br>
+<span class="ifc">zJSON& operator=(const char* json_value);</span><br>
+<span class="ifc">zJSON& operator=(const std::string & json_value);</span><br><br>
+Assign JSON object to specific value and type.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool swap(zJSON& src);</span><br><br>
+Swaps the contents of two objects(swaps only pointers). If objects are placed on common branch they will not be swapped.<br>
+Returns true if successfully , false if unsuccessfully.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">int type() const;</span><br><br>
+Returns type of object: enum { JSON_NULL=0, JSON_BOOLEAN, JSON_INTEGER, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_NODE }.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">std::string& name();</span><br><br>
+<span class="ifc">const std::string& name() const;</span><br><br>
+Returns reference to object name.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON* parent() const;</span><br><br>
+Returns pointer to parent object. If no parent, returns NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON* remove();</span><br><br>
+Sets parent to NULL and returns this. See functions insert, push_back, swap.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool operator==(const zJSON& src) const;</span><br>
+<span class="ifc">bool operator==(bool json_value) const;</span><br>
+<span class="ifc">bool operator==(char json_value) const;</span><br>
+<span class="ifc">bool operator==(unsigned char json_value) const;</span><br>
+<span class="ifc">bool operator==(short json_value) const;</span><br>
+<span class="ifc">bool operator==(unsigned short json_value) const;</span><br>
+<span class="ifc">bool operator==(int json_value) const;</span><br>
+<span class="ifc">bool operator==(unsigned json_value) const;</span><br>
+<span class="ifc">bool operator==(int64_t json_value) const;</span><br>
+<span class="ifc">bool operator==(uint64_t json_value) const;</span><br>
+<span class="ifc">bool operator==(float json_value) const;</span><br>
+<span class="ifc">bool operator==(double json_value) const;</span><br>
+<span class="ifc">bool operator==(long double json_value) const;</span><br>
+<span class="ifc">bool operator==(const char* json_value) const;</span><br>
+<span class="ifc">bool operator==(const std::string & json_value) const;</span><br>
+<span class="ifc">friend bool operator==(bool json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(char json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(unsigned char json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(short json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(unsigned short json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(int json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(unsigned json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(int64_t json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(uint64_t json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(float json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(double json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(long double json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(const char* json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator==(const std::string & json_value, const zJSON& src);</span><br><br>
+Compares this(src) and json_value.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool operator!=(const zJSON& src) const;</span><br>
+<span class="ifc">bool operator!=(bool json_value) const;</span><br>
+<span class="ifc">bool operator!=(char json_value) const;</span><br>
+<span class="ifc">bool operator!=(unsigned char json_value);</span><br>
+<span class="ifc">bool operator!=(short json_value) const;</span><br>
+<span class="ifc">bool operator!=(unsigned short json_value) const;</span><br>
+<span class="ifc">bool operator!=(int json_value) const;</span><br>
+<span class="ifc">bool operator!=(unsigned json_value) const;</span><br>
+<span class="ifc">bool operator!=(int64_t json_value) const;</span><br>
+<span class="ifc">bool operator!=(uint64_t json_value) const;</span><br>
+<span class="ifc">bool operator!=(float json_value) const;</span><br>
+<span class="ifc">bool operator!=(double json_value) const;</span><br>
+<span class="ifc">bool operator!=(long double json_value) const;</span><br>
+<span class="ifc">bool operator!=(const char* json_value) const;</span><br>
+<span class="ifc">bool operator!=(const std::string & json_value) const;</span><br>
+<span class="ifc">friend bool operator!=(bool json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(char json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(unsigned char json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(short json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(unsigned short json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(int json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(unsigned json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(int64_t json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(uint64_t json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(float json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(double json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(long double json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(const char* json_value, const zJSON& src);</span><br>
+<span class="ifc">friend bool operator!=(const std::string & json_value, const zJSON& src);</span><br><br>
+Compares this(src) and json_value.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">const bool* ptr_boolean() const;</span><br>
+<span class="ifc">bool* ptr_boolean();</span><br>
+<span class="ifc">const int64_t* ptr_integer() const;</span><br>
+<span class="ifc">int64_t* ptr_integer();</span><br>
+<span class="ifc">const double* ptr_number() const;</span><br>
+<span class="ifc">double* ptr_number();</span><br>
+<span class="ifc">const std::string* ptr_string() const;</span><br>
+<span class="ifc">std::string* ptr_string();</span><br><br>
+Returns pointer to plain type from JSON object. If a plain type is not found the function returns NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool as_boolean() const;</span><br>
+<span class="ifc">int64_t as_integer() const;</span><br>
+<span class="ifc">double as_number() const;</span><br>
+<span class="ifc">std::string as_string() const;</span><br>
+<span class="ifc">bool as_string(std::string& ret) const;</span><br><br>
+Returns copy of plain type from JSON object. The function tries to convert native value to result.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">const zJSON* operator[](size_t pos) const;</span><br>
+<span class="ifc">zJSON* operator[](size_t pos);</span><br>
+<span class="ifc">const zJSON* at(size_t pos) const;</span><br>
+<span class="ifc">zJSON* at(size_t pos);</span><br><br>
+Returns pointer to JSON object are placed at pos. If object is not found the function returns NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">const zJSON* front() const;</span><br>
+<span class="ifc">zJSON* front();</span><br><br>
+Returns a pointer to the first element. If element is not found the function returns NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">const zJSON* back() const;</span><br>
+<span class="ifc">zJSON* back();</span><br><br>
+Returns a pointer to the last element. If element is not found the function returns NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON* root();</span><br>
+<span class="ifc">zJSON* root(zJSON* prn);</span><br><br>
+Returns a pointer to the root object or pointer to prn object if it is placed between this and root.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">size_t index() const;</span><br><br>
+Returns index of object. If parent is NULL the function returns std::string::npos.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">size_t find(const std::string& json_name, size_t start_pos=0) const;  </span><br>
+<span class="ifc">zJSON* search(const std::string& json_name, size_t start_pos=0) const;</span><br><br>
+Searches object with json_name through the children starting start_pos. The functions return std::string::npos and NULL if the child does not exist.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool empty() const;</span><br><br>
+Indicates when the object has any children. If the object is not JSON_ARRAY or JSON_NODE the function returns true.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">size_t size() const;</span><br><br>
+Returns the number of children that the object has. The function returns 0 for anything other than JSON_ARRAY or JSON_NODE.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">void clear();</span><br><br>
+Removes all elements from the object (which are destroyed), leaving the container with a size of 0.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool erase(size_t pos);</span><br><br>
+Removes from the object a single element at pos. This effectively reduces the container size by the one element, which are destroyed.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">bool pop_back();</span><br><br>
+Removes the last element in the object, effectively reducing the container size by one. This destroys the removed element.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON* insert(size_t pos, const zJSON& val);</span><br>
+<span class="ifc">zJSON* insert(size_t pos, zJSON* val);</span><br><br>
+The object is extended by inserting the element val before the element at the specified pos, effectively increasing the container size by the one.
+ If pos >= size the object will be added to back.<br>
+Returns pointer to inserted object. If object is not inserted the function returns NULL.<br>
+At the first function the copy of the val will be created. At the second function the object val can be inserted if its parent is NULL.
+ The function remove() sets parent to NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON* push_back(const zJSON& val);</span><br>
+<span class="ifc">zJSON* push_back(zJSON* val);</span><br><br>
+Adds a new element at the end of the object, after its current last element.
+ The object is extended by adding the element val at the back, effectively increasing the container size by the one.<br>
+Returns pointer to added object. If object is not added the function returns NULL.<br>
+At the first function the copy of the val will be created. At the second function the object val can be added if its parent is NULL.
+ The function remove() sets parent to NULL.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">void write(std::string& ret) const;</span><br><br>
+Returns JSON text, with no white space.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">void write_formatted(std::string& ret) const;</span><br><br>
+Returns JSON text that has been indented and prettied up so that it can be easily read and modified by humans.<br>
+</div>
+
+<br><hr width=100% color= #000000 align="center"><br>
+<div  class="doctext">
+<span class="ifc">zJSON::zParamJSON* param;</span><br>
+<span class="docpre">
+class zParamJSON
+{
+
+public:
+ zParamJSON() {};
+ virtual ~zParamJSON() { return; };
+ virtual zParamJSON* copy(zJSON* prn) const=0;
+
+private:
+ zParamJSON(const zParamJSON& src);
+ zParamJSON& operator=(const zParamJSON& src);
+};
+</span><br>
+zJSON::zParamJSON* param allows you to bind your object to the zJSON object.<br>
+To accomplish this task, your class must be inherited from the class zJSON::zParamJSON and the function zParamJSON * copy (zJSON* prn) const must be defined.<br>
+Function returns a copy of the object or NULL, and takes as a parameter a zJSON* pointer to the new parent of the returned object.<br>
+</div>
+<br><hr width=100% color= #000000 align="center"><br>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+</BODY></HTML>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
